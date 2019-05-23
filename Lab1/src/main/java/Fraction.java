@@ -27,15 +27,34 @@ public class Fraction implements Comparable<Fraction> {
 
     public void setDenominator(long n) { this.n = n; }
 
-    public int compareTo(Fraction o) {
-        long l = n * o.n / gcd(n, o.n);
-        long a = m * (l / o.n);
-        long b = o.m / (l / n);
+    public int compareTo(Fraction f) {
+        long l = n * f.getDenominator() / gcd(n, f.getDenominator());
+        long a = m * (l / f.getDenominator());
+        long b = f.getNumerator() / (l / n);
         if (a > b)
             return 1;
         else if (a < b)
             return -1;
         else
             return 0;
+    }
+
+    public String toString() {
+        return m + " / " + n;
+    }
+
+    public boolean equals(Object f) {
+        if (this == f)
+            return true;
+        if (f == null)
+            return false;
+        if (getClass() != f.getClass())
+            return false;
+        Fraction other = (Fraction) f;
+        return m == other.getNumerator() && n == other.getDenominator();
+    }
+
+    public int hashCode() {
+        return (int)((m + n) ^ (m - n) ^ m * 73 ^ n * 37);
     }
 }
