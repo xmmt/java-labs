@@ -1,14 +1,16 @@
 public class Fraction implements Comparable<Fraction> {
-    private long m, n;
+    private long numerator, denominator;
 
     Fraction(long m, long n) {
+        if (n == 0)
+            throw new java.lang.IllegalArgumentException("Denominator can't be zero");
         long g = gcd(m, n);
-        this.m = m / g;
-        this.n = n / g;
+        this.numerator = m / g;
+        this.denominator = n / g;
     }
     Fraction(long m) {
-        this.m = m;
-        this.n = 1;
+        this.numerator = m;
+        this.denominator = 1;
     }
 
     private long gcd(long a, long b) {
@@ -19,18 +21,18 @@ public class Fraction implements Comparable<Fraction> {
         return a;
     }
 
-    public long getNumerator() { return m; }
+    public long numerator() { return numerator; }
 
-    public long getDenominator() { return n; }
+    public long denominator() { return denominator; }
 
-    public void setNumerator(long m) { this.m = m; }
+    public void setNumerator(long m) { this.numerator = m; }
 
-    public void setDenominator(long n) { this.n = n; }
+    public void setDenominator(long n) { this.denominator = n; }
 
     public int compareTo(Fraction f) {
-        long l = n * f.getDenominator() / gcd(n, f.getDenominator());
-        long a = m * (l / f.getDenominator());
-        long b = f.getNumerator() / (l / n);
+        long l = denominator * f.denominator() / gcd(denominator, f.denominator());
+        long a = numerator * (l / f.denominator());
+        long b = f.numerator() / (l / denominator);
         if (a > b)
             return 1;
         else if (a < b)
@@ -40,7 +42,7 @@ public class Fraction implements Comparable<Fraction> {
     }
 
     public String toString() {
-        return m + " / " + n;
+        return numerator + " / " + denominator;
     }
 
     public boolean equals(Object f) {
@@ -55,13 +57,13 @@ public class Fraction implements Comparable<Fraction> {
     }
 
     public int hashCode() {
-        return (int)((m + n) ^ (m - n) ^ m * 73 ^ n * 37);
+        return (int)((numerator + denominator) ^ (numerator - denominator) ^ numerator * 73 ^ denominator * 37);
     }
 
     public Fraction add(Fraction f) {
-        long l = n * f.getDenominator() / gcd(n, f.getDenominator());
-        long a = m * (l / f.getDenominator());
-        long b = f.getNumerator() / (l / n);
+        long l = denominator * f.denominator() / gcd(denominator, f.denominator());
+        long a = numerator * (l / f.denominator());
+        long b = f.numerator() / (l / denominator);
         return new Fraction(a + b, l);
     }
 }
