@@ -51,10 +51,17 @@ public class Fraction implements Comparable<Fraction> {
         if (getClass() != f.getClass())
             return false;
         Fraction other = (Fraction) f;
-        return m == other.getNumerator() && n == other.getDenominator();
+        return compareTo(other) == 0;
     }
 
     public int hashCode() {
         return (int)((m + n) ^ (m - n) ^ m * 73 ^ n * 37);
+    }
+
+    public Fraction add(Fraction f) {
+        long l = n * f.getDenominator() / gcd(n, f.getDenominator());
+        long a = m * (l / f.getDenominator());
+        long b = f.getNumerator() / (l / n);
+        return new Fraction(a + b, l);
     }
 }
