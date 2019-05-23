@@ -17,4 +17,8 @@ public class Fraction {
     public boolean isLessThan(Fraction f) {
         return m * f.getNumerator() < n * f.getDenominator();
     }
+
+    public boolean isEqual(Fraction f) {
+        return m == f.getNumerator() && n == f.getDenominator();
+    }
 }

@@ -1,22 +1,23 @@
+import javafx.util.Pair;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class FractionSet {
-    private List<Fraction> fractions;
+    private List<Fraction> fractions = new ArrayList<Fraction>();
     private Fraction maxFractionCached;
     private Fraction minFractionCached;
-    private long countGreaterCached;
-    private long countLessCached;
     private boolean maxFractionCachedIsRelevant = false;
     private boolean minFractionCachedIsRelevant = false;
-    private boolean countGreaterCachedIsRelevant = false;
-    private boolean countLessCachedIsRelevant = false;
+    private List<Pair<Fraction, Long>> countGreaterCached = new ArrayList<Pair<Fraction, Long>>();
+    private List<Pair<Fraction, Long>> countLessCached = new ArrayList<Pair<Fraction, Long>>();
 
     public void addFraction(Fraction f) {
         fractions.add(f);
         maxFractionCachedIsRelevant = false;
         minFractionCachedIsRelevant = false;
-        countGreaterCachedIsRelevant = false;
-        countLessCachedIsRelevant = false;
+        countGreaterCached.clear();
+        countLessCached.clear();
     }
 
     public Fraction getMaxFraction() {
@@ -48,26 +49,32 @@ public class FractionSet {
     }
 
     public long countOfFractionsGreaterThan(Fraction f) {
-        if (countGreaterCachedIsRelevant)
-            return countGreaterCached;
-        countGreaterCached = 0;
+        for (Pair<Fraction, Long> i : countGreaterCached)
+            if (i.getKey().isEqual(f))
+                return i.getValue();
+        long result = 0;
         for (Fraction i : fractions) {
             if (f.isLessThan(i))
-                 countGreaterCached++;
+                 result++;
         }
-        countGreaterCachedIsRelevant = true;
-        return countGreaterCached;
+        countGreaterCached.add(new Pair<Fraction, Long>(f, result));
+        if (countGreaterCached.size() > 10)
+            countGreaterCached.remove(0);
+        return result;
     }
 
     public long countOfFractionsLessThan(Fraction f) {
-        if (countLessCachedIsRelevant)
-            return countLessCached;
-        countLessCached = 0;
+        for (Pair<Fraction, Long> i : countLessCached)
+            if (i.getKey().isEqual(f))
+                return i.getValue();
+        long result = 0;
         for (Fraction i : fractions) {
             if (i.isLessThan(f))
-                countLessCached++;
+                result++;
         }
-        countLessCachedIsRelevant = true;
-        return countLessCached;
+        countLessCached.add(new Pair<Fraction, Long>(f, result));
+        if (countLessCached.size() > 10)
+            countLessCached.remove(0);
+        return result;
     }
 }
