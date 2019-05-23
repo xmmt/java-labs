@@ -5,56 +5,36 @@ import java.util.List;
 
 public class FractionSet {
     private List<Fraction> fractions = new ArrayList<Fraction>();
-    private Fraction maxFractionCached;
-    private Fraction minFractionCached;
-    private boolean maxFractionCachedIsRelevant = false;
-    private boolean minFractionCachedIsRelevant = false;
+    private Fraction maxFraction = null;
+    private Fraction minFraction = null;
     private List<Pair<Fraction, Long>> countGreaterCached = new ArrayList<Pair<Fraction, Long>>();
     private List<Pair<Fraction, Long>> countLessCached = new ArrayList<Pair<Fraction, Long>>();
 
     public void addFraction(Fraction f) {
         fractions.add(f);
-        maxFractionCachedIsRelevant = false;
-        minFractionCachedIsRelevant = false;
+        if (maxFraction == null || f.compareTo(maxFraction) == 1)
+            maxFraction = f;
+        if (minFraction == null || f.compareTo(minFraction) == -1)
+            minFraction = f;
         countGreaterCached.clear();
         countLessCached.clear();
     }
 
     public Fraction getMaxFraction() {
-        if (maxFractionCachedIsRelevant)
-            return maxFractionCached;
-        if (fractions.isEmpty())
-            return null;
-        maxFractionCached = fractions.get(0);
-        for (Fraction i : fractions) {
-            if (maxFractionCached.isLessThan(i))
-                maxFractionCached = i;
-        }
-        maxFractionCachedIsRelevant = true;
-        return maxFractionCached;
+        return maxFraction;
     }
 
     public Fraction getMinFraction() {
-        if (minFractionCachedIsRelevant)
-            return minFractionCached;
-        if (fractions.isEmpty())
-            return null;
-        minFractionCached = fractions.get(0);
-        for (Fraction i : fractions) {
-            if (i.isLessThan(minFractionCached))
-                minFractionCached = i;
-        }
-        minFractionCachedIsRelevant = true;
-        return minFractionCached;
+        return minFraction;
     }
 
     public long countOfFractionsGreaterThan(Fraction f) {
         for (Pair<Fraction, Long> i : countGreaterCached)
-            if (i.getKey().isEqual(f))
+            if (i.getKey().equals(f))
                 return i.getValue();
         long result = 0;
         for (Fraction i : fractions) {
-            if (f.isLessThan(i))
+            if (f.compareTo(i) == -1)
                  result++;
         }
         countGreaterCached.add(new Pair<Fraction, Long>(f, result));
@@ -65,11 +45,11 @@ public class FractionSet {
 
     public long countOfFractionsLessThan(Fraction f) {
         for (Pair<Fraction, Long> i : countLessCached)
-            if (i.getKey().isEqual(f))
+            if (i.getKey().equals(f))
                 return i.getValue();
         long result = 0;
         for (Fraction i : fractions) {
-            if (i.isLessThan(f))
+            if (i.compareTo(f) == -1)
                 result++;
         }
         countLessCached.add(new Pair<Fraction, Long>(f, result));
