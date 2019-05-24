@@ -16,7 +16,9 @@ public class Fraction implements Comparable<Fraction> {
     private long gcd(long a, long b) {
         while (b != 0) {
             a %= b;
-            a ^= b ^= a ^= b;
+            a ^= b;
+            b ^= a;
+            a ^= b;
         }
         return a;
     }
@@ -42,7 +44,7 @@ public class Fraction implements Comparable<Fraction> {
     }
 
     public String toString() {
-        return numerator + " / " + denominator;
+        return numerator + "/" + denominator;
     }
 
     public boolean equals(Object f) {
