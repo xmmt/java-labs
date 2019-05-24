@@ -10,8 +10,12 @@ public class FractionSet {
     private List<Fraction> fractions = new ArrayList<Fraction>();
     private Fraction maxFraction = null;
     private Fraction minFraction = null;
-    private List<Pair<Fraction, Long>> countGreaterCached = new ArrayList<Pair<Fraction, Long>>();
-    private List<Pair<Fraction, Long>> countLessCached = new ArrayList<Pair<Fraction, Long>>();
+    private List<Pair<Fraction, Integer>> countGreaterCached = new ArrayList<Pair<Fraction, Integer>>();
+    private List<Pair<Fraction, Integer>> countLessCached = new ArrayList<Pair<Fraction, Integer>>();
+
+    public List<Fraction> getFractions() {
+        return fractions;
+    }
 
     public void addFraction(Fraction f) {
         fractions.add(f);
@@ -32,30 +36,30 @@ public class FractionSet {
     }
 
     public long countOfFractionsGreaterThan(Fraction f) {
-        for (Pair<Fraction, Long> i : countGreaterCached)
+        for (Pair<Fraction, Integer> i : countGreaterCached)
             if (i.getKey().equals(f))
                 return i.getValue();
-        long result = 0;
+        int result = 0;
         for (Fraction i : fractions) {
             if (f.compareTo(i) < 0)
                  result++;
         }
-        countGreaterCached.add(new Pair<Fraction, Long>(f, result));
+        countGreaterCached.add(new Pair<Fraction, Integer>(f, result));
         if (countGreaterCached.size() > 10)
             countGreaterCached.remove(0);
         return result;
     }
 
-    public long countOfFractionsLessThan(Fraction f) {
-        for (Pair<Fraction, Long> i : countLessCached)
+    public int countOfFractionsLessThan(Fraction f) {
+        for (Pair<Fraction, Integer> i : countLessCached)
             if (i.getKey().equals(f))
                 return i.getValue();
-        long result = 0;
+        int result = 0;
         for (Fraction i : fractions) {
             if (i.compareTo(f) < 0)
                 result++;
         }
-        countLessCached.add(new Pair<Fraction, Long>(f, result));
+        countLessCached.add(new Pair<Fraction, Integer>(f, result));
         if (countLessCached.size() > 10)
             countLessCached.remove(0);
         return result;
@@ -78,5 +82,9 @@ public class FractionSet {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public int size() {
+        return fractions.size();
     }
 }
