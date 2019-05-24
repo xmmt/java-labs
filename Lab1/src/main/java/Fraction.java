@@ -1,10 +1,16 @@
+import static java.lang.Math.abs;
+
 public class Fraction implements Comparable<Fraction> {
     private long numerator, denominator;
 
     Fraction(long m, long n) {
         if (n == 0)
             throw new java.lang.IllegalArgumentException("Denominator can't be zero");
-        long g = gcd(m, n);
+        if (n < 0) {
+            m *= -1;
+            n *= -1;
+        }
+        long g = gcd(abs(m), abs(n));
         this.numerator = m / g;
         this.denominator = n / g;
     }
@@ -64,8 +70,8 @@ public class Fraction implements Comparable<Fraction> {
 
     public Fraction add(Fraction f) {
         long l = denominator * f.denominator() / gcd(denominator, f.denominator());
-        long a = numerator * (l / f.denominator());
-        long b = f.numerator() / (l / denominator);
+        long a = numerator * (l / denominator());
+        long b = f.numerator() * (l / f.denominator);
         return new Fraction(a + b, l);
     }
 }
